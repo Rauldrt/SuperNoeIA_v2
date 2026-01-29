@@ -1,9 +1,9 @@
 
-const CACHE_NAME = 'noelia-ai-cache-v1';
+const CACHE_NAME = 'noelia-ai-cache-v2'; // Increment version to force update
 const ASSETS_TO_CACHE = [
-  '/',
-  '/index.html',
-  '/manifest.json'
+  './',
+  './index.html',
+  './manifest.json'
 ];
 
 // 1. Install Event: Cache static assets
@@ -35,7 +35,6 @@ self.addEventListener('activate', (event) => {
 });
 
 // 3. Fetch Event: Network First, fallback to Cache
-// Estategia ideal para Apps que dependen de datos frescos (API) y CDNs externos
 self.addEventListener('fetch', (event) => {
   // Ignorar peticiones que no sean GET o sean a la API de Google/Firebase
   if (event.request.method !== 'GET' || 
@@ -47,19 +46,16 @@ self.addEventListener('fetch', (event) => {
   event.respondWith(
     fetch(event.request)
       .then((response) => {
-        // Si la red responde bien, actualizamos el caché (si es válido) y devolvemos respuesta
         if (!response || response.status !== 200 || response.type !== 'basic') {
           return response;
         }
         const responseToCache = response.clone();
         caches.open(CACHE_NAME).then((cache) => {
-            // Intentar cachear (puede fallar con opaque responses de CDNs, es normal)
             try { cache.put(event.request, responseToCache); } catch(e) {}
         });
         return response;
       })
       .catch(() => {
-        // Si falla la red (offline), buscamos en caché
         return caches.match(event.request);
       })
   );
