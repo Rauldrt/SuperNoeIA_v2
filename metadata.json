@@ -1,0 +1,5 @@
+{
+  "name": "Gem Custom Runner",
+  "description": "Una aplicación web RAG (Retrieval-Augmented Generation) del lado del cliente, altamente modular y estética, diseñada para chatear con tus propios documentos utilizando la potencia de Gemini.",
+  "requestFramePermissions": []
+}
